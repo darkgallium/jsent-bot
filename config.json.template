@@ -1,0 +1,27 @@
+{
+  "token": "your discord bot token",
+  "announcement_channels": [
+    "a list of channel IDs in which the bot will post a message when new grades are available"
+  ],
+  "crawl_interval": "integer value, time interval in ms after which the bot will recheck for new grades.",
+
+  "credentials": {
+    "login": "your ent login/username",
+    "password": "your ent password"
+  },
+
+  "entrypoint_url": "the url of the CAS",
+  "results_url": "the url of the results page",
+
+  "results_file": "name of the file where the program will store the results",
+
+  "log_file": "name of the file where the program will store the logs",
+  "log_level": "debug",
+  "log_maxsize": "maximum size of logs in bytes, remove this from config if you don't want a maxsize",
+
+  "presence": {
+    "activity": "the game the bot is playing, optional, remove this entry if you don't want to set it",
+    "status": "the status of the bot (only these values are allowed : https://discord.js.org/#/docs/main/stable/typedef/PresenceStatus), optional, remove this entry if you don't want to set it"
+  }
+
+}

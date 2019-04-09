@@ -10,6 +10,11 @@
     "password": "your ent password"
   },
 
+  "scheduler": {
+    "startHour": "integer value, hour of day (0-23) where you want to start to check for new grades, remove scheduler if you want to check regardless of the hour.",
+    "endHour": "integer value, hour of day (0-23) where you want to stop to check for new grades, remove scheduler if you want to check regardless of the hour."
+  },
+
   "entrypoint_url": "the url of the CAS",
   "results_url": "the url of the results page",
 
@@ -17,7 +22,6 @@
 
   "log_file": "name of the file where the program will store the logs",
   "log_level": "debug",
-  "log_maxsize": "maximum size of logs in bytes, remove this from config if you don't want a maxsize",
 
   "presence": {
     "activity": "the game the bot is playing, optional, remove this entry if you don't want to set it",

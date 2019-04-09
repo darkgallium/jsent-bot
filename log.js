@@ -19,12 +19,9 @@
 
 const config = require('./config.json');
 const winston = require('winston');
+require('winston-daily-rotate-file');
 
-let file_opts = { filename: config.log_file };
-
-if (config.log_maxsize) {
-  file_opts["maxsize"] = config.log_maxsize;
-}
+let file_opts = { filename: config.log_file, frequency: "1d", maxFiles: "2d" };
 
 const log = winston.createLogger({
   level: config.log_level,
@@ -35,7 +32,7 @@ const log = winston.createLogger({
     winston.format.simple()
   ),
   transports: [
-    new winston.transports.File(file_opts)
+    new winston.transports.DailyRotateFile(file_opts)
   ]
 });
 

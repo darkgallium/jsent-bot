@@ -70,6 +70,7 @@ class ENT {
 
 	getResultsArray(callback) {
 		this.connect(function(connected) {
+
 			if (connected) {
 
 				request(config.results_url, function(error, response, html) {
@@ -83,7 +84,16 @@ class ENT {
 							let desc = $(children[0]).text();
 							let grade = $(children[1]).text();
 
+							/*
+							 * This regex matches the description of the grade, for example "ESM05-INFOC - Langage C : E1"
+							 * and helps split it in three information : code and name of the module and type of assessment.
+							 */
 							let desc_reg = /^\s*([A-Za-z0-9]{5}-[A-Za-z0-9-_]+)\s+-\s+(.*?)\s:\s([A-Z0-9]+)\s*$/;
+
+							/*
+							 * This regex matches the grade itself, for example "20.00 / 20"
+							 * For some reason, the page either uses . or , alternatively as a separator for the decimals.
+							 */
 							let grade_reg = /^\s*(\d+(,|.)\d+ \/ \d+)\s*$/;
 
 							let m1 = desc.match(desc_reg);
@@ -101,7 +111,9 @@ class ENT {
 										c["grade"] = m2[1];
 								}
 
+								// We only push this item to the grade array if it matches regex m1 that ensures it is a grade that we need to take into account.
 								grades.push(c);
+
 							}
 
 						});
@@ -126,6 +138,11 @@ class ENT {
 
 
 					for (const item_c of curr_grades) {
+
+						/*
+						 * If we can find a corresponding (same code & same type) grade in the previous array that has a null grade (no grade)
+						 * while the current array has a non-null grade, it means that the results for this grade where put online and we need to inform users.
+						 */
 
 						let diff_grade = prev_grades.find((item_p) => {
 							return item_c.code == item_p.code && item_c.type == item_p.type && item_p.grade == null && item_c.grade != null;

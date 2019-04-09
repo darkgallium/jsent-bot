@@ -17,6 +17,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+const process = require('process');
 const config = require('./config.json');
 const logger = require('./log.js');
 const ENT = require('./ent.js');
@@ -24,20 +25,12 @@ const ENT = require('./ent.js');
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-client.on('ready', () => {
-	logger.log.info(`Logged in as ${client.user.tag}!`);
+function crawl() {
 
-	/*for (const channel of config.announcement_channels) {
-		client.channels.get(channel).send(`Bonjour!\nThéorème.`);
-	}*/
+	let e = new ENT.ENT(config.credentials.login, config.credentials.password);
+	let d = new Date();
 
-	if (config.presence) {
-		if (config.presence.activity) { client.user.setActivity(config.presence.activity); }
-		if (config.presence.status) { client.user.setStatus(config.presence.status); }
-	}
-
-	setInterval(() => {
-		let e = new ENT.ENT(config.credentials.login, config.credentials.password);
+	if (!config.scheduler || (d.getHours() >= config.scheduler.startHour && d.getHours() < config.scheduler.endHour)) {
 
 		e.crawl((diff) => {
 
@@ -70,8 +63,29 @@ client.on('ready', () => {
 
 		});
 
+	}
+
+}
+
+client.on('ready', () => {
+	logger.log.info(`Logged in as ${client.user.tag}!`);
+
+	if (config.presence) {
+		if (config.presence.activity) { client.user.setActivity(config.presence.activity); }
+		if (config.presence.status) { client.user.setStatus(config.presence.status); }
+	}
+
+	setInterval(() => {
+		crawl();
 	}, config.crawl_interval);
 
+});
+
+// This is used to gracefully exit the server when SIGINT is emitted, e.g when your systemd service stops.
+
+process.on('SIGINT', function() {
+	client.destroy();
+	process.exit(0);
 });
 
 client.login(config.token);

@@ -1,12 +1,13 @@
 {
   "name": "jsent-bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Discord bot that alert people when new grades are online on the school intranet.",
   "main": "server.js",
   "author": "darkgallium",
   "license": "GPL-3.0",
   "dependencies": {
     "winston": "latest",
+    "winston-daily-rotate-file": "latest",
     "request": "latest",
     "cheerio": "latest",
     "discord.js": "latest"
